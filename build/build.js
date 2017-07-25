@@ -1,28 +1,146 @@
-require('shelljs/global');
-var webpack = require('webpack');
-var path = require('path');
+const fs = require('fs')
+const path = require('path')
+const zlib = require('zlib')
+const uglify = require('uglify-js')
+const rollup = require('rollup')
+const buble = require('rollup-plugin-buble')
+const flow = require('rollup-plugin-flow-no-whitespace')
+const cjs = require('rollup-plugin-commonjs')
+const node = require('rollup-plugin-node-resolve')
+const replace = require('rollup-plugin-replace')
+const babel = require('rollup-plugin-babel')
+const version = process.env.VERSION || require('../package.json').version
+const banner =
+    `/**
+  * vuejs-modal v${version}
+  * (c) ${new Date().getFullYear()} shaodahong
+  * @license MIT
+  */`
 
-rm('-rf', 'dist/');
+if (!fs.existsSync('dist')) {
+    fs.mkdirSync('dist')
+}
 
-module.exports = {
-    entry: {
-        index: './src/index.js'
+const resolve = _path => path.resolve(__dirname, '../', _path)
+
+build([
+    // browser dev
+    {
+        dest: resolve('dist/vuejs-modal.js'),
+        format: 'umd',
+        env: 'development'
     },
-    output: {
-        path: path.resolve(__dirname, '../dist'),
-        publicPath: '',
-        filename: '[name].js'
+    {
+        dest: resolve('dist/vuejs-modal.min.js'),
+        format: 'umd',
+        env: 'production'
     },
-    resolve: {
-        extensions: ['*', '.js', '.json'],
+    {
+        dest: resolve('dist/vuejs-modal.common.js'),
+        format: 'cjs'
     },
-    module: {
-        rules: [{
-            test: /\.js$/,
-            exclude: /(node_modules)/,
-            use: {
-                loader: 'babel-loader'
-            }
-        }]
+    {
+        dest: resolve('dist/vuejs-modal.esm.js'),
+        format: 'es'
     }
+].map(genConfig))
+
+function build(builds) {
+    let built = 0
+    const total = builds.length
+    const next = () => {
+        buildEntry(builds[built]).then(() => {
+            built++
+            if (built < total) {
+                next()
+            }
+        }).catch(logError)
+    }
+
+    next()
+}
+
+function genConfig(opts) {
+    const config = {
+        entry: resolve('src/index.js'),
+        dest: opts.dest,
+        format: opts.format,
+        banner,
+        moduleName: 'vuejsModal',
+        plugins: [
+            flow(),
+            node(),
+            cjs(),
+            replace({
+                __VERSION__: version
+            }),
+            buble(),
+            babel()
+        ]
+    }
+
+    if (opts.env) {
+        config.plugins.unshift(replace({
+            'process.env.NODE_ENV': JSON.stringify(opts.env)
+        }))
+    }
+
+    return config
+}
+
+function buildEntry(config) {
+
+    const isProd = /min\.js$/.test(config.dest)
+    return rollup.rollup(config).then(bundle => {
+        return bundle.generate(config).then(res => {
+            const code = res.code
+            if (isProd) {
+                var minified = (config.banner ? config.banner + '\n' : '') + uglify.minify(code, {
+                    output: {
+                        ascii_only: true
+                    },
+                    compress: {
+                        pure_funcs: ['makeMap']
+                    }
+                }).code
+                return write(config.dest, minified, true)
+            } else {
+                return write(config.dest, code)
+            }
+        })
+
+    })
+}
+
+function write(dest, code, zip) {
+    return new Promise((resolve, reject) => {
+        function report(extra) {
+            console.log(blue(path.relative(process.cwd(), dest)) + ' ' + getSize(code) + (extra || ''))
+            resolve()
+        }
+
+        fs.writeFile(dest, code, err => {
+            if (err) return reject(err)
+            if (zip) {
+                zlib.gzip(code, (err, zipped) => {
+                    if (err) return reject(err)
+                    report(' (gzipped: ' + getSize(zipped) + ')')
+                })
+            } else {
+                report()
+            }
+        })
+    })
+}
+
+function getSize(code) {
+    return (code.length / 1024).toFixed(2) + 'kb'
+}
+
+function logError(e) {
+    console.log(e)
+}
+
+function blue(str) {
+    return '\x1b[1m\x1b[34m' + str + '\x1b[39m\x1b[22m'
 }
