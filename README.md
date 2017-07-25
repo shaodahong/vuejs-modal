@@ -24,7 +24,7 @@ Vue.use(Modal, {
 
 Use in component:
 
-```javascript
+```js
 <template>
     <!-- your html -->
 </template>
@@ -42,7 +42,7 @@ export default {
 
 ## options
 
-```javascript
+```js
 Vue.use(Modal, {
     // Use this in the component modal called the name, the default is $modal.
     name: '$modal',
