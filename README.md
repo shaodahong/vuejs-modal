@@ -26,7 +26,7 @@ Use in component:
 
 ```js
 <template>
-    <!-- your html -->
+    ……
 </template>
 
 <script>
@@ -50,7 +50,8 @@ Vue.use(Modal, {
     // modal div id name,  the default is modal.
     id: 'modal',
 
-    // your modals, is a object, the default is null, this object key is called the modal name, value is a vue component.
+    // your modals, is a object, the default is null
+    // this object key is called the modal name, value is a vue component. 
     modals: {
         confirm: confirm.component
     },
