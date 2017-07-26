@@ -2,6 +2,8 @@
 
 A simple、highly customizable vue modal plugin.
 
+[中文]('README-ZH.md')
+
 ## Introduction
 
 A file corresponds to a modal, and registered to vue prototype, so I can use it through `this`, it gives me a state of a `promise`, so I can get this modal state.
@@ -65,7 +67,7 @@ Vue.use(Modal, {
         confirm: confirm.component
     },
 
-    // modal style,  the default hava a z-index
+    // modal default style,  the default hava a z-index, it will be increment
     style: {
         position: 'fixed',
         top: 0,
@@ -79,9 +81,9 @@ Vue.use(Modal, {
 
 ## Event
 ```js
-// If you can click ok button:
-this.$emit('$ok', this.$el)
+// If you can click ok button, it can be resolve promise, and you can get params in then:
+this.$emit('$ok', this.$el, params)
 
-// If you can click cancel button:
-this.$emit('$cancel', this.$el)
+// If you can click cancel button, it can be reject promise, and you can get params in catch:
+this.$emit('$cancel', this.$el, params)
 ```
