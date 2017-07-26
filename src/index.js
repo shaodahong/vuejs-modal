@@ -12,6 +12,11 @@ var Modal = {
             id: 'modal',
             modals: null,
             style: {
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
                 zIndex: 1000
             }
         }, options)
@@ -20,7 +25,7 @@ var Modal = {
         this.zIndex = defaultOptions.style.zIndex;
 
         // if no modals
-        if (!defaultOptions.modals) {
+        if (this.isEmpty(defaultOptions.modals)) {
             throw new Error('vuejs-modal plugin have a modals params')
         }
 
@@ -28,10 +33,10 @@ var Modal = {
         this.init(defaultOptions.id);
 
         // modals space
-        var modals = Vue.prototype[defaultOptions.name] = {};
+        let modals = Vue.prototype[defaultOptions.name] = {};
 
         // bind modals
-        Object.keys(defaultOptions.modals).forEach( v => {
+        Object.keys(defaultOptions.modals).forEach(v => {
 
             /**
              * 
@@ -41,25 +46,31 @@ var Modal = {
              */
             modals[v] = options => {
                 return new Promise((resolve, reject) => {
-                    new Vue({
-                        render: h => h(defaultOptions.modals[v], {
-                            props: options,
-                            style: Object.assign(defaultOptions.style, {
-                                zIndex: this.zIndex
-                            }),
-                            on: {
-                                $ok: function (info) {
-                                    resolve(info)
-                                },
-                                $close: function (info) {
-                                    reject(info)
+                    try {
+                        new Vue({
+                            render: h => h(defaultOptions.modals[v], {
+                                props: options,
+                                style: Object.assign(defaultOptions.style, {
+                                    zIndex: this.zIndex
+                                }),
+                                on: {
+                                    $ok: function ($el, info) {
+                                        $el.remove()
+                                        resolve(info)
+                                    },
+                                    $cancel: function ($el, info) {
+                                        $el.remove()
+                                        reject(info)
+                                    }
                                 }
-                            }
-                        })
-                    }).$mount('#' + defaultOptions.id)
+                            })
+                        }).$mount('#' + defaultOptions.id)
+                        this.zIndex += 5;
+                        this.init(defaultOptions.id);
+                    } catch (error) {
+                        console.error('vuejs-modal', error)
+                    }
 
-                    this.zIndex += 5;
-                    this.init(defaultOptions.id);
                 })
             }
 
@@ -75,7 +86,16 @@ var Modal = {
         div.setAttribute('id', name || 'modal');
         document.getElementsByTagName('body')[0].appendChild(div)
     },
-    zIndex: 1000
+    zIndex: 1000,
+    isEmpty: function (object) {
+        if (object === null || object === undefined) {
+            return true;
+        }
+        for (var i in object) {
+            return false;
+        }
+        return true;
+    }
 }
 
 // if vue in window

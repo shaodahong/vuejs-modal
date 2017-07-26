@@ -66,7 +66,7 @@ function genConfig(opts) {
         dest: opts.dest,
         format: opts.format,
         banner,
-        moduleName: 'vuejsModal',
+        moduleName: 'VuejsModal',
         plugins: [
             flow(),
             node(),

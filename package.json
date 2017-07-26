@@ -1,6 +1,6 @@
 {
   "name": "vuejs-modal",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A simple、highly customizable vue modal plugin.",
   "main": "dist/vuejs-modal.common.js",
   "module": "dist/vuejs-modal.esm.js",
@@ -42,8 +42,9 @@
     "rollup-plugin-flow-no-whitespace": "^1.0.0",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-replace": "^1.1.1",
+    "rollup-plugin-vue": "^2.4.1",
+    "rollup-plugin-vue2": "^0.8.0",
     "shelljs": "^0.7.8",
-    "uglify-js": "^3.0.26",
-    "webpack": "^3.3.0"
+    "uglify-js": "^3.0.26"
   }
 }
