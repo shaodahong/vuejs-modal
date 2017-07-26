@@ -17,8 +17,13 @@ $ npm i vuejs-modal -S
 ```javascript
 import Modal from 'vuejs-modal'
 
+// If you can use default template, you should be:
+import confirm from 'vuejs-modal/lib/confirm.vue'
+
 Vue.use(Modal, {
-     modals  //your modals, is a object 
+     modals: {
+         confirm //default template
+     }  //your modals, is a object 
 })
 ```
 
@@ -26,14 +31,18 @@ Use in component:
 
 ```js
 <template>
-    ……
+    //html
 </template>
 
 <script>
 export default {
     methods: {
         show: function () {
-            this.$modal.confirm()
+            this.$modal.confirm().then( res => {
+                // I click ok button
+            }).catch( rej => {
+                // I click cancel button
+            })
         }
     }
 }
@@ -58,7 +67,21 @@ Vue.use(Modal, {
 
     // modal style,  the default hava a z-index
     style: {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
         zIndex: 1000
     }
 })
+```
+
+## Event
+```js
+// If you can click ok button:
+this.$emit('$ok', this.$el)
+
+// If you can click cancel button:
+this.$emit('$cancel', this.$el)
 ```
