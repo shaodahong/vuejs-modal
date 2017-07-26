@@ -2,7 +2,7 @@
 
 A simple、highly customizable vue modal plugin.
 
-[中文]('README-ZH.md')
+[中文](README-ZH.md)
 
 ## Introduction
 
