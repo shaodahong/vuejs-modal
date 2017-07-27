@@ -35,6 +35,7 @@
 <style scoped>
     .confirm-main {
         width: 60%;
+        max-width: 600px;
         margin: 50px auto;
         background-color: #fff;
         opacity: 1;

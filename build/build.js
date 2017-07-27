@@ -8,7 +8,6 @@ const flow = require('rollup-plugin-flow-no-whitespace')
 const cjs = require('rollup-plugin-commonjs')
 const node = require('rollup-plugin-node-resolve')
 const replace = require('rollup-plugin-replace')
-const babel = require('rollup-plugin-babel')
 const version = process.env.VERSION || require('../package.json').version
 const banner =
     `/**
@@ -74,8 +73,7 @@ function genConfig(opts) {
             replace({
                 __VERSION__: version
             }),
-            buble(),
-            babel()
+            buble()
         ]
     }
 

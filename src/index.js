@@ -1,3 +1,30 @@
+// Object.assign Polyfill
+if (typeof Object.assign != 'function') {
+  Object.assign = function(target) {
+    'use strict';
+    if (target == null) {
+      throw new TypeError('Cannot convert undefined or null to object');
+    }
+
+    target = Object(target);
+    for (var index = 1; index < arguments.length; index++) {
+      var source = arguments[index];
+      if (source != null) {
+        for (var key in source) {
+          if (Object.prototype.hasOwnProperty.call(source, key)) {
+            target[key] = source[key];
+          }
+        }
+      }
+    }
+    return target;
+  };
+}
+
+// Promise Polyfill Auto
+require('es6-promise').polyfill();
+require('es6-promise/auto');
+
 var Modal = {
     /**
      * 
@@ -82,7 +109,7 @@ var Modal = {
      * @param {string} name 
      */
     init: name => {
-        const div = document.createElement('div');
+        var div = document.createElement('div');
         div.setAttribute('id', name || 'modal');
         document.getElementsByTagName('body')[0].appendChild(div)
     },
