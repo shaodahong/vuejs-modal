@@ -1,4 +1,6 @@
-# vuejs-modal ![travis-ci](https://travis-ci.org/shaodahong/vuejs-modal.svg?branch=master)
+<h1 align="center">vuejs-modal</h1>
+
+![travis-ci](https://travis-ci.org/shaodahong/vuejs-modal.svg?branch=master)
 
 A simple、highly customizable vue modal plugin.
 
