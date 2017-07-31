@@ -1,6 +1,6 @@
 {
   "name": "vuejs-modal",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A simple、highly customizable vue modal plugin.",
   "main": "dist/vuejs-modal.common.js",
   "module": "dist/vuejs-modal.esm.js",

@@ -1,29 +1,28 @@
 // Object.assign Polyfill
 if (typeof Object.assign != 'function') {
-  Object.assign = function(target) {
-    'use strict';
-    if (target == null) {
-      throw new TypeError('Cannot convert undefined or null to object');
-    }
-
-    target = Object(target);
-    for (var index = 1; index < arguments.length; index++) {
-      var source = arguments[index];
-      if (source != null) {
-        for (var key in source) {
-          if (Object.prototype.hasOwnProperty.call(source, key)) {
-            target[key] = source[key];
-          }
+    Object.assign = function (target) {
+        'use strict';
+        if (target == null) {
+            throw new TypeError('Cannot convert undefined or null to object');
         }
-      }
-    }
-    return target;
-  };
+
+        target = Object(target);
+        for (var index = 1; index < arguments.length; index++) {
+            var source = arguments[index];
+            if (source != null) {
+                for (var key in source) {
+                    if (Object.prototype.hasOwnProperty.call(source, key)) {
+                        target[key] = source[key];
+                    }
+                }
+            }
+        }
+        return target;
+    };
 }
 
 // Promise Polyfill Auto
-require('es6-promise').polyfill();
-require('es6-promise/auto');
+var Promise = require('es6-promise').Promise;
 
 var Modal = {
     /**
@@ -73,30 +72,26 @@ var Modal = {
              */
             modals[v] = options => {
                 return new Promise((resolve, reject) => {
-                    try {
-                        new Vue({
-                            render: h => h(defaultOptions.modals[v], {
-                                props: options,
-                                style: Object.assign(defaultOptions.style, {
-                                    zIndex: this.zIndex
-                                }),
-                                on: {
-                                    $ok: function ($el, info) {
-                                        $el.remove()
-                                        resolve(info)
-                                    },
-                                    $cancel: function ($el, info) {
-                                        $el.remove()
-                                        reject(info)
-                                    }
+                    new Vue({
+                        render: h => h(defaultOptions.modals[v], {
+                            props: options,
+                            style: Object.assign(defaultOptions.style, {
+                                zIndex: this.zIndex
+                            }),
+                            on: {
+                                $ok: function ($el, info) {
+                                    $el.remove()
+                                    resolve(info)
+                                },
+                                $cancel: function ($el, info) {
+                                    $el.remove()
+                                    reject(info)
                                 }
-                            })
-                        }).$mount('#' + defaultOptions.id)
-                        this.zIndex += 5;
-                        this.init(defaultOptions.id);
-                    } catch (error) {
-                        console.error('vuejs-modal', error)
-                    }
+                            }
+                        })
+                    }).$mount('#' + defaultOptions.id)
+                    this.zIndex += 5;
+                    this.init(defaultOptions.id);
 
                 })
             }
