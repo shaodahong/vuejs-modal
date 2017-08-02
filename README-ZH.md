@@ -1,4 +1,8 @@
-# vuejs-modal ![travis-ci](https://travis-ci.org/shaodahong/vuejs-modal.svg?branch=master)
+<h1 align="center">vuejs-modal</h1>
+
+> 这个插件适用于vue 2.0+
+
+![travis-ci](https://travis-ci.org/shaodahong/vuejs-modal.svg?branch=master)
 
 一个简洁，高度可定制的vue modal插件。
 
