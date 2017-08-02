@@ -1,5 +1,6 @@
 <h1 align="center">vuejs-modal</h1>
-> This plugin which works only with Vue 2.0
+
+> This plugin which works only with Vue 2.0+
 
 ![travis-ci](https://travis-ci.org/shaodahong/vuejs-modal.svg?branch=master)
 
